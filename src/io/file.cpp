@@ -27,6 +27,7 @@
 
 #include "io/gfx/video.h"
 #include "util.h"
+#include "io/log.h"
 
 #include <string.h>
 #include <miniz.h>
@@ -56,7 +57,7 @@ File::File (const char* name, bool write) {
 
 	}
 
-	log("Could not open file", name);
+	LOG_WARN("Could not open file: %s", name);
 
 	throw E_FILE;
 
@@ -70,13 +71,9 @@ File::~File () {
 
 	fclose(file);
 
-#ifdef VERBOSE
-	log("Closed file", filePath);
-#endif
+	LOG_TRACE("Closed file: %s", filePath);
 
 	delete[] filePath;
-
-	return;
 
 }
 
@@ -134,7 +131,7 @@ bool File::open (const char* path, const char* name, bool write) {
 
 	if (file) {
 
-        LOG("Opened file", filePath);
+        LOG_DEBUG("Opened file: %s", filePath);
 
 		return true;
 
@@ -247,7 +244,7 @@ unsigned short int File::loadShort (unsigned short int max) {
 
 	if (val > max) {
 
-		logError("Oversized value in file", filePath);
+		LOG_ERROR("Oversized value in file: %s", filePath);
 
 		return max;
 
